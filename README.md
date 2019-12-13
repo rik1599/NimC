@@ -16,5 +16,5 @@ Si suggerisce di pensare ad un protocollo di comunicazione binario, e definire u
 ## Requisiti
 Il codice deve essere consegnato in un archivio .zip o.tar.gz (link a repository github) contenente:
  - Il codice sorgente completo dei due programmi, compilante senza errori
- - UnMakefileper la compilazione.
+ - Un Makefile per la compilazione.
  - Una relazione in formato .pdf che descriva brevemente il funzionamento del codice ed eventuali scelte che valga la pena giustificare. Si indichi su che sistema operativo e con quale compilatore è stato testato il programma
