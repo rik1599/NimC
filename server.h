@@ -5,6 +5,7 @@
 #define SERVER_H
 
 #include <sys/socket.h>
+#include "game.h"
 
 /**
  * Crea un socket, ne esegue il bind su address e imposta il limite
@@ -28,18 +29,50 @@ int createAndBind(int domain, int type, int protocol, struct sockaddr *address, 
  * 
  * @return file descriptor connesso al client, -1 se ERRORE
  */
-int connectToClient(int socket);
+int connectToPlayer(int socket);
 
 /**
- * Riceve dal client secondo il seguente protocollo di comunicazione
- * 1) Viene inviata dal client la dimensione del messaggio in arrivo (in byte)
- * 2) Viene istanziato un buffer puntato a void* della dimensione ricevuta
- * 3) Si riceve il messaggio dal client
- * In caso di errori CHIUDE la comunicazione e ritorna -1 come puntatore a int*
+ * Dato un campo di gioco creato in precedenza crea un nuovo
+ * @param playerOne socket descriptor del giocatore 1
+ * @param playerTwo socket descriptor giocatore 2
+ * @param field il campo di gioco creato precedentemente
  * 
- * @param fd file descriptor della comunicazione in corso
- * @return void* buffer con il messaggio (da castare nel tipo desiderato), -1* se ERRORE
+ * @return una struct che rappresenta la partita
  */
-void* receive(int fd);
+game_t *iniziaPartita(int playerOne, int playerTwo, field_t field);
+
+/**
+ * Invia al player attualmente attivo i vari messaggi di output
+ * In caso di errore torna -1
+ * @param player il giocatore a cui inviare il messaggio
+ * @param message il messaggio da visualizzare
+ */
+int sendMessage(int player, char *message);
+
+/**
+ * Gestisce il turno lato server nel seguente modo
+ * 1) Ricezione della pila scelta
+ * 2) Ricezione del numero di pedine da rimuovere
+ * Prima di ricevere la scelta deve essere inviato al giocatore il messaggio con le istruzioni
+ * Se in queste operazioni dovessero esserci delle irregolarità, viene richiesto al giocatore
+ * di turno di reinserire la scelta sbagliata
+ * 3) Applicazione delle mosse e invio del field aggiornato
+ * 4) Cambio turno tra i giocatori
+ * 5) Controllo del vincitore
+ * 
+ * In caso di errori di comunicazione termina la partita
+ * 
+ * @param game la partita in corso
+ */
+void turno(game_t *game);
+
+/**
+ * Termina la partita disconnettendo i giocatori
+ * Se la partita è terminata causa disconnessione (-1) il giocatore ancora online è dichiarato vincitore
+ * (ma viene comunque segnalata la disconnessione)
+ * @param player il giocatore vincitore
+ * @param code il motivo dell'interruzione (0 partita finita, -1 disconnessione o errori vari)
+ */
+void terminaPartita(int player, int code);
 
 #endif
