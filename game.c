@@ -38,16 +38,16 @@ field_t *startGame(){
  */
 int scegliPila(game_t *game, unsigned int pila){  
     
-    game_t gioco = *game;// Accesso al gioco
-    field_t campo = *gioco.field;// Accesso al campo
-    campo.pilascelta = pila;
-
     if(pila != 0 || pila != 1){
         return -1;
-    }else if (campo.pile[campo.pilascelta] == 0)
+    }else if (game->field->pile[game->field->pilascelta] == 0) 
     {
         return -2;
+    }else
+    {
+        game->field->pilascelta = pila;
     }
+    
 
     return 0;
 }
@@ -64,14 +64,11 @@ int scegliPila(game_t *game, unsigned int pila){
  * @param pedine il numero di pedine da rimuovere dalla pila scelta in precedenza
  */
 int mossa(game_t *game, unsigned int pedine){
-    
-    game_t gioco = *game;// Accesso al gioco
-    field_t campo = *gioco.field;// Accesso al campo
 
-    if(campo.pile[campo.pilascelta] < pedine){
+    if( game->field->pile[game->field->pilascelta] < pedine){
         return -1;
     }
-    // TO DO: Chiedere chiarimenti sulla seconda parte del contratto
+    
     return 0;
 }
 
@@ -81,34 +78,32 @@ int mossa(game_t *game, unsigned int pedine){
  * Se è vero torna il giocatore di turno che viene dichiarato vincitore
  */
 int winner(game_t *game){
-    game_t gioco = *game;// Accesso al gioco
-    field_t campo = *gioco.field;// Accesso al campo
     int pedineRimaste;
 
-    pedineRimaste = campo.pile[0] + campo.pile[1];
+  
 
+    pedineRimaste = game->field->pile[0] + game->field->pile[1];
+    
     if(pedineRimaste = 1){
-        return gioco.turn;
+        return game->turn;
     }
     
-    // TO DO: Chiedere il valore da restituire nel caso in cui le pedine > 1
-    return -2;
+    // TO DO: Da definire nel contratto 
+    return 2;//
 }
 
 /**
  * Cambia il turno tra i giocatori
  */
 void cambiaTurno(game_t *game){
-   
-    game_t gioco = *game;// Accesso al gioco
     
-    switch (gioco.turn)
+    switch (game->turn)
     {
     case 0:
-        gioco.turn = 1;
+        game->turn = 1;
         break;
     case 1:
-        gioco.turn = 0;
+        game->turn = 0;
         break;
     }
 
