@@ -14,7 +14,7 @@ typedef struct game
 {
     int players[2]; // I giocatori (file descriptor)
     int turn;       // Il turno del giocatore (0,1)
-    field_t *field   // Il campo di gioco
+    field_t *field;   // Il campo di gioco
 } game_t;
 
 /**

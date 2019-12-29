@@ -12,7 +12,7 @@ int connectToPlayer(int socket)
     
 }
 
-game_t *iniziaPartita(int playerOne, int playerTwo, field_t field)
+game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field)
 {
     
 }

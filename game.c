@@ -1,5 +1,6 @@
 #include "game.h"
 #include <time.h>
+#include <stdlib.h>
 
 /**
  * Crea il campo di gioco (estrae a caso il numero di pedine di ogni pila)

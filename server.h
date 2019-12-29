@@ -39,7 +39,7 @@ int connectToPlayer(int socket);
  * 
  * @return una struct che rappresenta la partita
  */
-game_t *iniziaPartita(int playerOne, int playerTwo, field_t field);
+game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field);
 
 /**
  * Invia al player attualmente attivo i vari messaggi di output
