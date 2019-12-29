@@ -16,24 +16,24 @@
  * 2) Si incrementa la dimensione di buffer se minore della lunghezza del messaggio
  * 3) Si riceve il messaggio dal client
  * In caso di errori CHIUDE la comunicazione e ritorna -1
- * 
+ *
  * @param fd file descriptor della comunicazione in corso
  * @param buffer void* buffer in cui inserire il messaggio/variabile (da castare nel tipo desiderato)
  * @param size dimensione del buffer
- * 
+ *
  * @return -1 in caso di errori, 0 altrimenti
  */
-int receive(int fd, void* buffer, unsigned int size);
+int receive(int fd, void *buffer, unsigned int size);
 
 /**
  * Invia al client con lo stesso protocollo indicato sopra
- * 
+ *
  * @param fd file descriptor della comunicazione in corso
  * @param buffer void* buffer da cui inviare
  * @param size dimensione del buffer
- * 
+ *
  * @return -1 in caso di errori, 0 altrimenti
  */
-int sendSock(int fd, void* buffer, unsigned int size);
+int sendSock(int fd, void *buffer, unsigned int size);
 
 #endif

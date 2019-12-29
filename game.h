@@ -14,12 +14,12 @@ typedef struct game
 {
     int players[2]; // I giocatori (file descriptor)
     int turn;       // Il turno del giocatore (0,1)
-    field_t *field;   // Il campo di gioco
+    field_t *field; // Il campo di gioco
 } game_t;
 
 /**
  * Crea il campo di gioco (estrae a caso il numero di pedine di ogni pila)
- * 
+ *
  * @return una struct rappresentante il campo di gioco
  */
 field_t *startGame();
@@ -28,7 +28,7 @@ field_t *startGame();
  * Imposta la pila scelta dal giocatore di turno, se il numero dovesse essere diverso da (0,1)
  * torna -1
  * Se una pila è vuota e viene selezionata torna -2
- * 
+ *
  * @param game il gioco in corso
  * @param pila la pila da scegliere (0,1)
  */
@@ -41,7 +41,7 @@ int scegliPila(game_t *game, unsigned int pila);
  * Se una delle due pile dovesse essere vuota e nell'altra sono presenti ancora pedine,
  * il numero massimo di pedine che possono essere tolte è il numero delle pedine presenti - 1
  * (vince chi toglie l'ultima pedina)
- * 
+ *
  * @param game il gioco in corso
  * @param pedine il numero di pedine da rimuovere dalla pila scelta in precedenza
  */

@@ -4,19 +4,19 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <sys/socket.h>
 #include "game.h"
+#include <sys/socket.h>
 
 /**
  * Crea un socket, ne esegue il bind su address e imposta il limite
- * di connessioni simultanee (indicate dal programmatore) e gestisce eventuali 
+ * di connessioni simultanee (indicate dal programmatore) e gestisce eventuali
  * errori chiudendo il programma
  * @param domain dominio del socket (AF_LOCAL)
  * @param type tipo del socket (SOCK_STREAM)
  * @param protol protocollo da usare (0)
  * @param address indirizzo completo del socket
  * @param limit numero massimo di connessioni contemporaneamente collegati al server
- * 
+ *
  * @return socket descriptor
  */
 int createAndBind(int domain, int type, int protocol, struct sockaddr *address, int limit);
@@ -26,7 +26,7 @@ int createAndBind(int domain, int type, int protocol, struct sockaddr *address, 
  * In caso di errori esce dalla funzione segnalando l'errore
  * (Non deve bloccare il programma)
  * @param socket un binded socket
- * 
+ *
  * @return file descriptor connesso al client, -1 se ERRORE
  */
 int connectToPlayer(int socket);
@@ -36,7 +36,7 @@ int connectToPlayer(int socket);
  * @param playerOne socket descriptor del giocatore 1
  * @param playerTwo socket descriptor giocatore 2
  * @param field il campo di gioco creato precedentemente
- * 
+ *
  * @return una struct che rappresenta la partita
  */
 game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field);
@@ -59,9 +59,9 @@ int sendMessage(int player, char *message);
  * 3) Applicazione delle mosse e invio del field aggiornato
  * 4) Cambio turno tra i giocatori
  * 5) Controllo del vincitore
- * 
+ *
  * In caso di errori di comunicazione termina la partita
- * 
+ *
  * @param game la partita in corso
  */
 void turno(game_t *game);
