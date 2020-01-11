@@ -42,6 +42,13 @@ int connectToPlayer(int socket);
 game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field);
 
 /**
+ * Funzione che gestisce la partita (da chiamare in fase di creazione del thread)
+ * 
+ * @param arg struct della partita (passata come void * causa chiamata pthread_create)
+ */
+int playGame(void *arg);
+
+/**
  * Invia al player attualmente attivo i vari messaggi di output
  * In caso di errore torna -1
  * @param player il giocatore a cui inviare il messaggio

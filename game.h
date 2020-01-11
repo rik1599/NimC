@@ -22,7 +22,7 @@ typedef struct game
  *
  * @return una struct rappresentante il campo di gioco
  */
-field_t *startGame();
+field_t *createField();
 
 /**
  * Imposta la pila scelta dal giocatore di turno, se il numero dovesse essere diverso da (0,1)

@@ -7,7 +7,7 @@
  *
  * @return una struct rappresentante il campo di gioco
  */
-field_t *startGame()
+field_t *createField()
 {
 
     int numElementiPilaUno;
