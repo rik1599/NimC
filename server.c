@@ -48,7 +48,7 @@ game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field)
     return newGame;
 }
 
-int playGame(void *arg)
+void *playGame(void *arg)
 {
     game_t *game = (game_t *) arg;
     for (size_t i = 0; i < 2; i++)

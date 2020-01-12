@@ -46,7 +46,7 @@ game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field);
  * 
  * @param arg struct della partita (passata come void * causa chiamata pthread_create)
  */
-int playGame(void *arg);
+void *playGame(void *arg);
 
 /**
  * Invia al player attualmente attivo i vari messaggi di output
