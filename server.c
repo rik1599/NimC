@@ -72,7 +72,7 @@ void turno(game_t *game)
 {
 }
 
-void terminaPartita(int player, int code)
+void terminaPartita(int player, int code, game_t *game)
 {
 }
 
