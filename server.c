@@ -24,11 +24,7 @@ int connectToPlayer(int socket)
     while (1)
     {
         int fd = accept(socket, (struct sockaddr *)&client_addr, &client_len);
-        if (fd == -1)
-        {
-            fprintf(stderr, "accept()");
-        }
-        else
+        if (checkNoExit(fd, "accept()") != -1)
         {
             sendMessage(fd, "Connesso!, In attesa di un altro giocatore...");
             return fd;
