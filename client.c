@@ -12,10 +12,13 @@ int connectToServer(int domain, int type, int protocol, struct sockaddr *address
         "Connection failed"
     );
 
+    receiveMessage(sock);
+
     return sock;
 }
 
-int turno(field_t *field) {
+int turno(field_t *field) 
+{
     
 }
 

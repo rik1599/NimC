@@ -50,6 +50,8 @@ void *playGame(void *arg)
     for (size_t i = 0; i < 2; i++)
     {
         sendMessage(game->players[i], "Partita iniziata");
+        sendSock(game->players[i], game->turn, sizeof(int));
+        sendSock(game->players[i], game->field, sizeof(*game->field));
         if (game->turn == i)
         {
             sendMessage(game->players[i], "Comincia tu!");
@@ -63,7 +65,7 @@ int sendMessage(int player, char *message)
 
 }
 
-void turno(game_t *game)
+void turno()
 {
 }
 

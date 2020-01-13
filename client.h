@@ -39,4 +39,9 @@ int turno(field_t *field);
  */
 char *receiveMessage(int server);
 
+/**
+ * Riceve i vari messaggi di inizio partita e il field iniziale
+ */
+field_t *startGame();
+
 #endif
