@@ -8,8 +8,8 @@
 int createAndBind(int domain, int type, int protocol, struct sockaddr *address, int limit)
 {
     int sock = socket(domain, type, protocol);
-    check(sock, 1, "socket()");
-    check(bind(sock, address, sizeof address), 2, "bind()");
+    checkWithExit(sock, 1, "socket()");
+    checkWithExit(bind(sock, address, sizeof address), 2, "bind()");
     listen(sock, limit);
     fprintf(stderr, "In ascolto.\n");
     return sock;
@@ -74,17 +74,4 @@ void turno(game_t *game)
 
 void terminaPartita(int player, int code, game_t *game)
 {
-}
-
-/*
- * Funzione di utilità per controllare il valore di ritorno di una funzione
- * POSIX e uscire in caso di errore
- */
-void check(int result, int exitval, const char *msg)
-{
-    if (result == -1)
-    {
-        perror(msg);
-        exit(exitval);
-    }
 }

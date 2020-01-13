@@ -36,4 +36,16 @@ int receive(int fd, void *buffer, unsigned int size);
  */
 int sendSock(int fd, void *buffer, unsigned int size);
 
+/*
+ * Funzione di utilità per controllare il valore di ritorno di una funzione
+ * POSIX e ritornare -1 in caso di errore
+ */
+int checkWithExit(int result, int exitval, const char *msg);
+
+/*
+ * Funzione di utilità per controllare il valore di ritorno di una funzione
+ * POSIX e ritornare -1 in caso di errore
+ */
+int checkNoExit(int result, const char *msg);
+
 #endif
