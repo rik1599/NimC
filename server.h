@@ -78,7 +78,6 @@ void turno(game_t *game);
  * Se la partita è terminata causa disconnessione (-1) il giocatore ancora online è dichiarato vincitore
  * (ma viene comunque segnalata la disconnessione)
  * 
- * 
  * @param player il giocatore vincitore
  * @param code il motivo dell'interruzione (0 partita finita, -1 disconnessione o errori vari)
  * @param game_t *game il gioco (fare i free)

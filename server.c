@@ -53,8 +53,7 @@ void *playGame(void *arg)
         if (game->turn == i)
         {
             sendMessage(game->players[i], "Comincia tu!");
-        }
-        
+        }        
     }
     
 }
