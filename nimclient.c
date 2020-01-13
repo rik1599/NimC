@@ -16,5 +16,7 @@ int main(int argc, char const *argv[])
     struct sockaddr_un address = {AF_LOCAL, SOCKADDR};
     int sock = connectToServer(AF_LOCAL, SOCK_STREAM, 0, (struct sockaddr *) &address);
 
+    
+
     return 0;
 }

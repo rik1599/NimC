@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "client.h"
 #include "tools.h"
 
@@ -12,13 +16,30 @@ int connectToServer(int domain, int type, int protocol, struct sockaddr *address
         "Connection failed"
     );
 
-    receiveMessage(sock);
+    printf(receiveMessage(sock));
+    printf("\n");
 
     return sock;
+}
+
+char *receiveMessage(int server)
+{
+    char *msg = malloc(sizeof(char));
+    receive(server, msg, sizeof(char));
 }
 
 int turno(field_t *field) 
 {
     
+}
+
+field_t *startGame(int server)
+{
+    field_t *field = malloc(sizeof(field_t));
+    checkWithExit(
+        receive(server, field, sizeof(field_t)),
+        -2,
+        "field_t"
+    );
 }
 

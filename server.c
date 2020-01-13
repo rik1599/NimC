@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/un.h>
+#include <unistd.h>
 
 #include "server.h"
 #include "tools.h"
@@ -26,8 +27,15 @@ int connectToPlayer(int socket)
         int fd = accept(socket, (struct sockaddr *)&client_addr, &client_len);
         if (checkNoExit(fd, "accept()") != -1)
         {
-            sendMessage(fd, "Connesso!, In attesa di un altro giocatore...");
-            return fd;
+            fd = checkAndDisconnect(
+                sendMessage(fd, "Connesso!, In attesa di un altro giocatore..."),
+                fd
+            );
+
+            if (fd != -1)
+            {
+                return fd;
+            }
         }
     }
 }
@@ -55,7 +63,7 @@ void *playGame(void *arg)
         if (game->turn == i)
         {
             sendMessage(game->players[i], "Comincia tu!");
-        }        
+        } 
     }
     
 }
@@ -71,4 +79,17 @@ void turno()
 
 void terminaPartita(int player, int code, game_t *game)
 {
+}
+
+int checkAndDisconnect(int result, int fd)
+{
+    if (result == -1)
+    {
+        perror("Disconnected!");
+        close(fd);
+        return -1;
+    } else
+    {
+        return fd;
+    }
 }
