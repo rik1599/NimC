@@ -16,16 +16,21 @@ int connectToServer(int domain, int type, int protocol, struct sockaddr *address
         "Connection failed"
     );
 
-    printf(receiveMessage(sock));
-    printf("\n");
+    receiveMessage(sock);
 
     return sock;
 }
 
-char *receiveMessage(int server)
+void receiveMessage(int server)
 {
     char *msg = malloc(sizeof(char));
-    receive(server, msg, sizeof(char));
+    checkWithExit(
+        receive(server, msg, sizeof(char)),
+        -3,
+        "Receive message failed"
+    );
+    printf(msg);
+    printf("\n");
 }
 
 int turno(field_t *field) 

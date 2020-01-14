@@ -31,13 +31,12 @@ int connectToServer(int domain, int type, int protocol, struct sockaddr *address
 int turno(field_t *field);
 
 /**
- * Riceve i vari messaggi dal server
+ * Riceve i vari messaggi dal server e li stampa su stdout
  * 
  * @param server file descriptor della connessione col server
  * 
- * @return messaggio ricevuto dal server
  */
-char *receiveMessage(int server);
+void receiveMessage(int server);
 
 /**
  * Riceve i vari messaggi di inizio partita e il field iniziale
