@@ -43,4 +43,9 @@ void receiveMessage(int server);
  */
 field_t *startGame(int server);
 
+
+/**
+ * Stampa il field su stdout
+ */
+void printField(field_t *field);
 #endif
