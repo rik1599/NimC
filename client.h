@@ -40,12 +40,16 @@ void receiveMessage(int server);
 
 /**
  * Riceve i vari messaggi di inizio partita e il field iniziale
+ * 
+ * @param server server file descriptor
+ * @return the initial field created by the server
  */
 field_t *startGame(int server);
 
-
 /**
  * Stampa il field su stdout
+ * 
  */
-void printField(field_t *field);
+void printField(field_t *field, int fd);
+
 #endif

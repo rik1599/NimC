@@ -62,7 +62,7 @@ field_t *startGame(int server)
 
     if (turn == 0)
     {
-        receiveMessage(server);
+        printf("Inizi tu!\n");
     }
 
     return field;
