@@ -69,6 +69,20 @@ field_t *startGame(int server)
     
 }
 
+void printField(field_t *field, FILE *file)
+{
+    for (size_t i = 0; i < 2; i++)
+    {
+        fprintf(file, "Pila %d:", i);
+        for (size_t j = 0; j < field->pile[i]; j++)
+        {
+            fprintf(file, "| ");
+        }
+        fprintf(file, "\n");
+    }
+        
+}
+
 void checkWithDisconnectAndExit(int result, int server, int exitval, const char* msg)
 {
     if (result == -1)
