@@ -55,23 +55,18 @@ void *playGame(void *arg)
     game_t *game = (game_t *)arg;
     for (size_t i = 0; i < (sizeof(game->players) / sizeof(int)); i++)
     {
-        sendSock(game->players[i], game->turn, sizeof(int));
-        sendSock(game->players[i], game->field, sizeof(*game->field));
+        sendCode(game->players[i], game->turn);
+        sendSock(game->players[i], game->field, sizeof(field_t));
     }
 
     int winPlayer = winner(game);
     while (winPlayer == 2)
     {
+        checkAndDisconnect(sendSock(game->players[game->turn], game->field, sizeof(field_t)), -2);
         turno(game);
-        cambiaTurno(game);
         winPlayer = winner(game);
-
         sendCode(game->players[game->turn], winPlayer);
-
-        if (winPlayer == 2)
-        {
-            checkAndDisconnect(sendSock(game->players[game->turn], game->field, sizeof(field_t)), -2);
-        }
+        cambiaTurno(game);
     }
 
     terminaPartita(winPlayer, 0, game);
@@ -89,17 +84,29 @@ int turno(game_t *game)
     int pila;
     int numeroDiPedine;
 
-    checkAndDisconnect(receive(game->players[game->turn], pila, sizeof(int)), game->players[game->turn]);
-    checkAndDisconnect(receive(game->players[game->turn], numeroDiPedine, sizeof(int)), game->players[game->turn]);
-
-    if (scegliPila(game, pila) != 0)
+    int checkPila = 0;
+    do
     {
-        sendCode(game->players[game->turn], -2);
-    }
-    else if (mossa(game, numeroDiPedine) == -1)
+        checkAndDisconnect(receive(game->players[game->turn], pila, sizeof(int)), game->players[game->turn]);
+        checkPila = scegliPila(game, pila);
+        if (checkPila != 0)
+        {
+            sendCode(game->players[game->turn], -2);
+        }
+        
+    } while (checkPila != 0);
+    
+    int checkPedine = 0;
+    do
     {
-        sendCode(game->players[game->turn], -2);
-    }
+        checkAndDisconnect(receive(game->players[game->turn], numeroDiPedine, sizeof(int)), game->players[game->turn]);
+        checkPedine = mossa(game, numeroDiPedine);
+        if (checkPedine == -1)
+        {
+            sendCode(game->players[game->turn], -2);
+        }
+        
+    } while (checkPedine == -1);
 }
 
 void terminaPartita(int player, int code, game_t *game)

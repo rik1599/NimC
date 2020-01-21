@@ -23,6 +23,8 @@ int main(int argc, char const *argv[])
     {
         esito = turno(field, server);
     }
+
+    receiveMessage(server, stdout);
     
     close(server);
     free(field);

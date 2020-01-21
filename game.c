@@ -17,8 +17,8 @@ field_t *createField()
     srand((unsigned)time(&t));
 
     // Numeri di elementi delle due pile
-    numElementiPilaUno = rand() % 20;
-    numElementiPilaDue = rand() % 20;
+    numElementiPilaUno = rand() % 20 + 2;
+    numElementiPilaDue = rand() % 20 + 2;
 
     // Creazione del campo di gioco
     field_t *campoDiGioco = malloc(sizeof(field_t));
@@ -92,7 +92,7 @@ int winner(game_t *game)
 
     if (pedineRimaste == 1)
     {
-        return game->turn;
+        return !game->turn;
     }
 
     return 2;
@@ -103,14 +103,5 @@ int winner(game_t *game)
  */
 void cambiaTurno(game_t *game)
 {
-
-    switch (game->turn)
-    {
-    case 0:
-        game->turn = 1;
-        break;
-    case 1:
-        game->turn = 0;
-        break;
-    }
+    game->turn = !game->turn;
 }

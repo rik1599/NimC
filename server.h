@@ -70,7 +70,7 @@ int sendMessage(int player, char *message);
  *
  * @param game la partita in corso
  */
-void turno(game_t *game);
+int turno(game_t *game);
 
 /**
  * Termina la partita disconnettendo i giocatori

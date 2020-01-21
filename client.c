@@ -28,22 +28,14 @@ void receiveMessage(int server, FILE *file)
 
 int turno(field_t *field, int server)
 {
+    checkWithDisconnectAndExit(receive(server, field, sizeof(field_t)), server, -4, "turno()");
+    printField(field, stdout);
+    sendCommand(server, stdin, "Scegli la pila (0,1): ", "Errore: pila inserita non valida!");
+    sendCommand(server, stdin,
+                "Scegli il numero di pedine da rimuovere: ", "Errore: numero di pedine inserite non valido!");
+
     int serverCode = 0;
     checkWithDisconnectAndExit(receive(server, &serverCode, sizeof(int)), server, -3, "sendCommand()");
-
-    if (serverCode == 2)
-    {
-        checkWithDisconnectAndExit(receive(server, field, sizeof(field_t)), server, -4, "turno()");
-        printField(field, stdout);
-        sendCommand(server, stdin, "Scegli la pila (0,1): ", "Errore: pila inserita non valida!");
-        sendCommand(server, stdin,
-                    "Scegli il numero di pedine da rimuovere: ", "Errore: numero di pedine inserite non valido!");
-    } 
-    else
-    {
-        receiveMessage(server, stdout);
-    }
-
     return serverCode;
 }
 
