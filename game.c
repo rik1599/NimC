@@ -82,7 +82,7 @@ int mossa(game_t *game, unsigned int pedine)
 /**
  * Controlla se è presente al più una pedina tra tutte e due le pile
  * Se è vero torna il giocatore di turno che viene dichiarato vincitore
- * Se il numero delle pedine è diverso da >=1 ritorna 2.
+ * Se il numero delle pedine è diverso da ==1 ritorna 2.
  */
 int winner(game_t *game)
 {
@@ -90,7 +90,7 @@ int winner(game_t *game)
 
     pedineRimaste = game->field->pile[0] + game->field->pile[1];
 
-    if (pedineRimaste >= 1)
+    if (pedineRimaste == 1)
     {
         return game->turn;
     }

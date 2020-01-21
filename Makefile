@@ -15,17 +15,14 @@ nimclient.o: nimclient.c client.h game.h
 server.o: server.h server.c game.h tools.h
 	clang -c -g server.h game.h tools.h game.c -o game.h
 
-client.o: client.h client.c game.h tools.h freadline.h
-	clang -c -g client.h game.h tools.h freadline.h client.c -o client.o
+client.o: client.h client.c game.h tools.h
+	clang -c -g client.h game.h tools.h client.c -o client.o
 
 game.o: game.h game.c
 	clang -c -g game.h game.c -o game.o
 
 tools.o: tools.h tools.c
 	clang -c -g tools.h tools.c -o tools.o
-
-freadline.o: freadline.h freadline.c
-	clang -c -g freadline.h freadline.c -o freadline.o
 
 clean:
 	rm -f *.out *.o

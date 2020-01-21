@@ -60,7 +60,6 @@ int sendMessage(int player, char *message);
  * Gestisce il turno lato server nel seguente modo
  * 1) Ricezione della pila scelta
  * 2) Ricezione del numero di pedine da rimuovere
- * Prima di ricevere la scelta deve essere inviato al giocatore il messaggio con le istruzioni
  * Se in queste operazioni dovessero esserci delle irregolarità, viene richiesto al giocatore
  * di turno di reinserire la scelta sbagliata
  * 3) Applicazione delle mosse e invio del field aggiornato

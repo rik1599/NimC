@@ -18,5 +18,14 @@ int main(int argc, char const *argv[])
 
     field_t* field = startGame(server);
 
+    int esito = turno(field, server);
+    while (esito == 2)
+    {
+        esito = turno(field, server);
+    }
+    
+    close(server);
+    free(field);
+
     return 0;
 }
