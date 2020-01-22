@@ -20,7 +20,7 @@
  *
  * @return socket descriptor
  */
-int createAndBind(int domain, int type, int protocol, struct sockaddr *address, int limit);
+int createAndBind(int domain, int type, int protocol, struct sockaddr *address, socklen_t len, int limit);
 
 /**
  * Si connette a un client
@@ -46,12 +46,13 @@ game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field);
  * Funzione che gestisce la partita (da chiamare in fase di creazione del thread)
  * 
  * @param arg struct della partita (passata come void * causa chiamata pthread_create)
+ * @return null pointer
  */
 void *playGame(void *arg);
 
 /**
  * Invia al player attualmente attivo i vari messaggi di output
- * In caso di errore torna -1
+ * In caso di errore disconnette
  * @param player il giocatore a cui inviare il messaggio
  * @param message il messaggio da visualizzare
  */
@@ -84,7 +85,14 @@ void turno(game_t *game);
  */
 void terminaPartita(int player, int code, game_t *game);
 
+/**
+ * 
+ */
 int checkAndDisconnect(int result, int fd);
+
+/**
+ * Invia al giocatore un 
+ */
 void sendCode(int fd, int code);
 
 #endif

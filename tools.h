@@ -8,7 +8,7 @@
 /**
  * Percorso del socket per la comunicazione
  */
-#define SOCKADDR "/tmp/upperserver.socket"
+#define SOCKADDR "/tmp/nimserver.socket"
 
 /**
  * Riceve dal client/server secondo il seguente protocollo di comunicazione

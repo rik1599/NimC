@@ -14,14 +14,14 @@
 int main(int argc, char const *argv[])
 {
     signal(SIGPIPE, SIG_IGN);
+    unlink(SOCKADDR);
 
     struct sockaddr_un addr = {
         .sun_family = AF_LOCAL,
         .sun_path = SOCKADDR
     };
-    unlink(SOCKADDR);
 
-    int sock = createAndBind(AF_LOCAL, SOCK_STREAM, 0, (struct sockaddr *) &addr, MAX_PLAYERS);
+    int sock = createAndBind(AF_LOCAL, SOCK_STREAM, 0, (struct sockaddr *) &addr, sizeof(addr), MAX_PLAYERS);
     
     while (1)
     {   

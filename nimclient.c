@@ -14,7 +14,7 @@
 int main(int argc, char const *argv[])
 {
     struct sockaddr_un address = {AF_LOCAL, SOCKADDR};
-    int server = connectToServer(AF_LOCAL, SOCK_STREAM, 0, (struct sockaddr *) &address);
+    int server = connectToServer(AF_LOCAL, SOCK_STREAM, 0, (struct sockaddr *) &address, sizeof(address));
 
     field_t* field = startGame(server);
 

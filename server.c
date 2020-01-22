@@ -3,15 +3,16 @@
 #include <string.h>
 #include <sys/un.h>
 #include <unistd.h>
+#include <pthread.h>
 
 #include "server.h"
 #include "tools.h"
 
-int createAndBind(int domain, int type, int protocol, struct sockaddr *address, int limit)
+int createAndBind(int domain, int type, int protocol, struct sockaddr *address, socklen_t len, int limit)
 {
     int sock = socket(domain, type, protocol);
     checkWithExit(sock, 1, "socket()");
-    checkWithExit(bind(sock, address, sizeof address), 2, "bind()");
+    checkWithExit(bind(sock, address, len), 2, "bind()");
     listen(sock, limit);
     fprintf(stderr, "In ascolto.\n");
     return sock;
@@ -29,6 +30,7 @@ int connectToPlayer(int socket)
         if (checkNoExit(fd, "accept()") != -1)
         {
             sendMessage(fd, "Connesso!, In attesa di un altro giocatore...");
+            fprintf(stderr, "Giocatore connesso\n");
 
             if (fd != -1)
             {
@@ -47,16 +49,21 @@ game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field)
     newGame->players[1] = playerTwo;
     newGame->turn = 0;
 
+    fprintf(stderr,
+        "Giocatore 1: %d\nGiocatore 2: %d\nPila 1: %d\nPila 2: %d\n",
+        newGame->players[0], newGame->players[1], newGame->field->pile[0], newGame->field->pile[1]);
+
     return newGame;
 }
 
 void *playGame(void *arg)
 {
+    fprintf(stderr, "Partita iniziata su thread id = %d\n", (int) pthread_self());
     game_t *game = (game_t *)arg;
-    for (size_t i = 0; i < (sizeof(game->players) / sizeof(int)); i++)
+    for (int i = 0; i < 2; i++)
     {
-        sendCode(game->players[i], game->turn);
-        checkAndDisconnect(sendSock(game->players[i], game->field, sizeof(field_t)), -2);
+        sendCode(game->players[i], i);
+        //checkAndDisconnect(sendSock(game->players[i], game->field, sizeof(field_t)), -2);
     }
 
     int winPlayer = winner(game);

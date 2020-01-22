@@ -19,7 +19,7 @@
  *
  * @return file descriptor della connessione al server
  */
-int connectToServer(int domain, int type, int protocol, struct sockaddr *address);
+int connectToServer(int domain, int type, int protocol, struct sockaddr *address, socklen_t len);
 
 /**
  * Gestisce il turno lato client nel seguente modo:
@@ -55,6 +55,6 @@ field_t *startGame(int server);
  */
 void printField(field_t *field, FILE *file);
 
-void sendCommand(int server, FILE *file, const char *msg, const char *invalidInputMsg);
+void sendCommand(int server, FILE *fileOutput, FILE *fileInput, const char *msg, const char *invalidInputMsg);
 void checkWithDisconnectAndExit(int result, int server, int exitval, const char *msg);
 #endif
