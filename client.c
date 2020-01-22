@@ -22,8 +22,8 @@ void receiveMessage(int server, FILE *file)
 {
     char *msg = malloc(sizeof(char));
     checkWithDisconnectAndExit(receive(server, msg, sizeof(char)), server, -3, "Receive message failed");
-    fprintf(file, msg);
-    fprintf(file, "\n");
+    fprintf(file, "%s" ,msg);
+    fprintf(file, "%s", "\n");
 }
 
 int turno(field_t *field, int server)
@@ -41,9 +41,9 @@ int turno(field_t *field, int server)
 
 void sendCommand(int server, FILE *file, const char *msg, const char *invalidInputMsg)
 {
-    fprintf(file, msg);
+    fprintf(file, "%s",msg);
     int x = 0;
-    fprintf(file, "%d", &x);
+    fprintf(file, "%d", x);
     checkWithDisconnectAndExit(sendSock(server, &x, sizeof(int)), server, -3, "sendCommand()");
 
     int serverCode = 0;
@@ -51,7 +51,7 @@ void sendCommand(int server, FILE *file, const char *msg, const char *invalidInp
 
     if (serverCode == -2)
     {
-        fprintf(file, invalidInputMsg);
+        fprintf(file, "%s", invalidInputMsg);
         sendCommand(server, file, msg, invalidInputMsg);
     }
 }
@@ -76,7 +76,7 @@ field_t *startGame(int server)
 
 void printField(field_t *field, FILE *file)
 {
-    for (size_t i = 0; i < 2; i++)
+    for (int i = 0; i < 2; i++)
     {
         fprintf(file, "Pila %d:", i);
         for (size_t j = 0; j < field->pile[i]; j++)

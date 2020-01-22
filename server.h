@@ -6,6 +6,7 @@
 
 #include "game.h"
 #include <sys/socket.h>
+#include <stdio.h>
 
 /**
  * Crea un socket, ne esegue il bind su address e imposta il limite
@@ -54,7 +55,7 @@ void *playGame(void *arg);
  * @param player il giocatore a cui inviare il messaggio
  * @param message il messaggio da visualizzare
  */
-int sendMessage(int player, char *message);
+void sendMessage(int player, char *message);
 
 /**
  * Gestisce il turno lato server nel seguente modo
@@ -70,7 +71,7 @@ int sendMessage(int player, char *message);
  *
  * @param game la partita in corso
  */
-int turno(game_t *game);
+void turno(game_t *game);
 
 /**
  * Termina la partita disconnettendo i giocatori
@@ -82,5 +83,8 @@ int turno(game_t *game);
  * @param game_t *game il gioco (fare i free)
  */
 void terminaPartita(int player, int code, game_t *game);
+
+int checkAndDisconnect(int result, int fd);
+void sendCode(int fd, int code);
 
 #endif

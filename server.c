@@ -28,7 +28,7 @@ int connectToPlayer(int socket)
         int fd = accept(socket, (struct sockaddr *)&client_addr, &client_len);
         if (checkNoExit(fd, "accept()") != -1)
         {
-            fd = checkAndDisconnect(sendMessage(fd, "Connesso!, In attesa di un altro giocatore..."), fd);
+            sendMessage(fd, "Connesso!, In attesa di un altro giocatore...");
 
             if (fd != -1)
             {
@@ -56,7 +56,7 @@ void *playGame(void *arg)
     for (size_t i = 0; i < (sizeof(game->players) / sizeof(int)); i++)
     {
         sendCode(game->players[i], game->turn);
-        sendSock(game->players[i], game->field, sizeof(field_t));
+        checkAndDisconnect(sendSock(game->players[i], game->field, sizeof(field_t)), -2);
     }
 
     int winPlayer = winner(game);
@@ -70,16 +70,17 @@ void *playGame(void *arg)
     }
 
     terminaPartita(winPlayer, 0, game);
+
+    return NULL;
 }
 
-int sendMessage(int player, char *message)
+void sendMessage(int player, char *message)
 {
     int size = (strlen(message) * sizeof(char));
-
-    sendSock(player, message, size);
+    checkAndDisconnect(sendSock(player, message, size), player);
 }
 
-int turno(game_t *game)
+void turno(game_t *game)
 {
     int pila;
     int numeroDiPedine;
@@ -87,7 +88,7 @@ int turno(game_t *game)
     int checkPila = 0;
     do
     {
-        checkAndDisconnect(receive(game->players[game->turn], pila, sizeof(int)), game->players[game->turn]);
+        checkAndDisconnect(receive(game->players[game->turn], (void *) &pila, sizeof(int)), game->players[game->turn]);
         checkPila = scegliPila(game, pila);
         if (checkPila != 0)
         {
@@ -99,7 +100,7 @@ int turno(game_t *game)
     int checkPedine = 0;
     do
     {
-        checkAndDisconnect(receive(game->players[game->turn], numeroDiPedine, sizeof(int)), game->players[game->turn]);
+        checkAndDisconnect(receive(game->players[game->turn], (void *) &numeroDiPedine, sizeof(int)), game->players[game->turn]);
         checkPedine = mossa(game, numeroDiPedine);
         if (checkPedine == -1)
         {
@@ -140,7 +141,7 @@ void terminaPartita(int player, int code, game_t *game)
 
 void sendCode(int fd, int code)
 {
-    checkAndDisconnect(sendSock(fd, &code, sizeof(int)), fd);
+    checkAndDisconnect(sendSock(fd, (void *) &code, sizeof(int)), fd);
 }
 
 int checkAndDisconnect(int result, int fd)

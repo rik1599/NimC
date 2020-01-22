@@ -4,8 +4,10 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "game.h"
 #include <sys/socket.h>
+#include <stdio.h>
+
+#include "game.h"
 
 /**
  * Crea un socket e lo connette al server. Gestisce eventuali
@@ -53,4 +55,6 @@ field_t *startGame(int server);
  */
 void printField(field_t *field, FILE *file);
 
+void sendCommand(int server, FILE *file, const char *msg, const char *invalidInputMsg);
+void checkWithDisconnectAndExit(int result, int server, int exitval, const char *msg);
 #endif
