@@ -64,7 +64,6 @@ field_t *startGame(int server)
     checkWithDisconnectAndExit(receive(server, &turn, sizeof(turn)), server, -2, "turn");
 
     field_t *field = malloc(sizeof(field_t));
-    // checkWithDisconnectAndExit(receive(server, field, sizeof(field_t)), server, -2, "field_t");
 
     fprintf(stdout, "Partita iniziata\n");
 

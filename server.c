@@ -63,7 +63,6 @@ void *playGame(void *arg)
     for (int i = 0; i < 2; i++)
     {
         sendCode(game->players[i], i);
-        //checkAndDisconnect(sendSock(game->players[i], game->field, sizeof(field_t)), -2);
     }
 
     int winPlayer = winner(game);
