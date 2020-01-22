@@ -100,7 +100,12 @@ void turno(game_t *game)
         if (checkPila != 0)
         {
             sendCode(game->players[game->turn], -2);
+        } 
+        else
+        {
+            sendCode(game->players[game->turn], 0);
         }
+        
         
     } while (checkPila != 0);
     
@@ -113,6 +118,11 @@ void turno(game_t *game)
         {
             sendCode(game->players[game->turn], -2);
         }
+        else
+        {
+            sendCode(game->players[game->turn], 0);
+        }
+        
         
     } while (checkPedine == -1);
 }

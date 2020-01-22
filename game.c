@@ -40,11 +40,11 @@ field_t *createField()
 int scegliPila(game_t *game, unsigned int pila)
 {
 
-    if (pila != 0 || pila != 1)
+    if (pila != 0 && pila != 1)
     {
         return -1;
     }
-    else if (game->field->pile[game->field->pilascelta] == 0)
+    else if (game->field->pile[pila] == 0)
     {
         return -2;
     }
@@ -75,7 +75,11 @@ int mossa(game_t *game, unsigned int pedine)
     {
         return -1;
     }
-
+    else
+    {
+        game->field->pile[game->field->pilascelta] -= pedine;
+    }
+    
     return 0;
 }
 
