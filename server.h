@@ -88,7 +88,7 @@ void terminaPartita(int player, int code, game_t *game);
 /**
  * 
  */
-int checkAndDisconnect(int result, int fd);
+void checkAndDisconnect(int result, int fd);
 
 /**
  * Invia al giocatore un 

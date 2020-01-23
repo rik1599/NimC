@@ -160,16 +160,12 @@ void sendCode(int fd, int code)
     checkAndDisconnect(sendSock(fd, (void *) &code, sizeof(int)), fd);
 }
 
-int checkAndDisconnect(int result, int fd)
+void checkAndDisconnect(int result, int fd)
 {
     if (result == -1)
     {
         perror("Disconnected!");
         close(fd);
-        return -1;
-    }
-    else
-    {
-        return fd;
+        pthread_exit(NULL);
     }
 }
