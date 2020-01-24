@@ -26,17 +26,32 @@ void receiveMessage(int server, FILE *file)
     fprintf(file, "%s", "\n");
 }
 
-int turno(field_t *field, int server)
+int isWinner(int server)
 {
+    int serverCode = 0;
+    checkWithDisconnectAndExit(receive(server, &serverCode, sizeof(int)), server, -3, "sendCommand()");
+    return serverCode;
+}
+
+
+int turno(field_t *field, int server, int turno)
+{
+    if (turno != 1)
+    {
+        if (isWinner(server) != 2)
+        {
+            return 1;
+        }
+    }
+    
     checkWithDisconnectAndExit(receive(server, field, sizeof(field_t)), server, -4, "turno()");
     printField(field, stdout);
     sendCommand(server, stdout, stdin, "Scegli la pila (0,1): ", "Errore: pila inserita non valida!\n");
     sendCommand(server, stdout, stdin,
                 "Scegli il numero di pedine da rimuovere: ", "Errore: numero di pedine inserite non valido!\n");
-
-    int serverCode = 0;
-    checkWithDisconnectAndExit(receive(server, &serverCode, sizeof(int)), server, -3, "sendCommand()");
-    return serverCode;
+    fprintf(stdout, "Turno finito, tocca al tuo avversario\n");
+    int winner = isWinner(server);
+    return winner;
 }
 
 void sendCommand(int server, FILE *fileOutput, FILE *fileInput, const char *msg, const char *invalidInputMsg)

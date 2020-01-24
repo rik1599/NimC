@@ -17,11 +17,10 @@ int main(int argc, char const *argv[])
     int server = connectToServer(AF_LOCAL, SOCK_STREAM, 0, (struct sockaddr *) &address, sizeof(address));
 
     field_t* field = startGame(server);
-
-    int esito = turno(field, server);
+    int esito = turno(field, server, 1);
     while (esito == 2)
     {
-        esito = turno(field, server);
+        esito = turno(field, server, 0);
     }
 
     receiveMessage(server, stdout);

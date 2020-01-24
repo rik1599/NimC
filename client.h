@@ -31,7 +31,7 @@ int connectToServer(int domain, int type, int protocol, struct sockaddr *address
  * @param field il terreno di gioco in uso (creato all'inizio della partita)
  * @param server file descriptor della connessione col server
  */
-int turno(field_t *field, int server);
+int turno(field_t *field, int server, int turno);
 
 /**
  * Riceve i vari messaggi dal server e li stampa su stdout

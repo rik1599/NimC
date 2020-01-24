@@ -56,6 +56,22 @@ int scegliPila(game_t *game, unsigned int pila)
     return 0;
 }
 
+int getMaxPedine(game_t *game)
+{
+    field_t *field = game->field;
+    if (field->pile[0] == 0)
+    {
+        return field->pile[1]-1;
+    }
+
+    if (field->pile[1] == 0)
+    {
+        return field->pile[0]-1;
+    }
+    
+    return field->pile[field->pilascelta];
+}
+
 /**
  * Rimuove le pedine dalla pila scelta dal giocatore
  * Se il numero di pedine inserito dovesse essere maggiore di quelle rimaste
@@ -70,8 +86,8 @@ int scegliPila(game_t *game, unsigned int pila)
  */
 int mossa(game_t *game, unsigned int pedine)
 {
-
-    if (game->field->pile[game->field->pilascelta] < pedine)
+    int maxPedine = getMaxPedine(game);
+    if (pedine > maxPedine || pedine == 0)
     {
         return -1;
     }
@@ -96,7 +112,7 @@ int winner(game_t *game)
 
     if (pedineRimaste == 1)
     {
-        return !game->turn;
+        return game->players[!game->turn];
     }
 
     return 2;

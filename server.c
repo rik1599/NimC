@@ -1,9 +1,9 @@
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/un.h>
 #include <unistd.h>
-#include <pthread.h>
 
 #include "server.h"
 #include "tools.h"
@@ -29,8 +29,10 @@ int connectToPlayer(int socket)
         int fd = accept(socket, (struct sockaddr *)&client_addr, &client_len);
         if (checkNoExit(fd, "accept()") != -1)
         {
-            sendMessage(fd, "Connesso!, In attesa di un altro giocatore...");
-            fprintf(stderr, "Giocatore connesso\n");
+            if(sendMessageToSock(fd, "Connesso!, In attesa di un altro giocatore...") == 0)
+            {
+                fprintf(stderr, "Giocatore connesso\n");
+            }
 
             if (fd != -1)
             {
@@ -48,31 +50,38 @@ game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field)
     newGame->players[0] = playerOne;
     newGame->players[1] = playerTwo;
     newGame->turn = 0;
+    newGame->turns = 0;
 
-    fprintf(stderr,
-        "Giocatore 1: %d\nGiocatore 2: %d\nPila 1: %d\nPila 2: %d\n",
-        newGame->players[0], newGame->players[1], newGame->field->pile[0], newGame->field->pile[1]);
+    fprintf(stderr, "Giocatore 1: %d\nGiocatore 2: %d\nPila 1: %d\nPila 2: %d\n", newGame->players[0],
+            newGame->players[1], newGame->field->pile[0], newGame->field->pile[1]);
 
     return newGame;
 }
 
 void *playGame(void *arg)
 {
-    fprintf(stderr, "Partita iniziata su thread id = %d\n", (int) pthread_self());
+    fprintf(stderr, "Partita iniziata su thread id = %d\n", (int)pthread_self());
     game_t *game = (game_t *)arg;
     for (int i = 0; i < 2; i++)
     {
-        sendCode(game->players[i], i);
+        sendCode(game->players[i], i, game);
     }
 
     int winPlayer = winner(game);
     while (winPlayer == 2)
     {
-        checkAndDisconnect(sendSock(game->players[game->turn], game->field, sizeof(field_t)), -2);
+        checkAndDisconnect(sendSock(game->players[game->turn], game->field, sizeof(field_t)), game);
         turno(game);
         winPlayer = winner(game);
-        sendCode(game->players[game->turn], winPlayer);
+        sendCode(game->players[game->turn], winPlayer, game);
         cambiaTurno(game);
+
+        if (game->turns > 0)
+        {
+            sendCode(game->players[game->turn], winPlayer, game);
+        }
+
+        game->turns++;    
     }
 
     terminaPartita(winPlayer, 0, game);
@@ -80,10 +89,15 @@ void *playGame(void *arg)
     return NULL;
 }
 
-void sendMessage(int player, char *message)
+int sendMessageToSock(int fd, char *message)
 {
     int size = (strlen(message) * sizeof(char));
-    checkAndDisconnect(sendSock(player, message, size), player);
+    return sendSock(fd, message, size);
+}
+
+void sendMessage(int player, char *message, game_t *game)
+{
+    checkAndDisconnect(sendMessageToSock(player, message), game);
 }
 
 void turno(game_t *game)
@@ -94,35 +108,34 @@ void turno(game_t *game)
     int checkPila = 0;
     do
     {
-        checkAndDisconnect(receive(game->players[game->turn], (void *) &pila, sizeof(int)), game->players[game->turn]);
+        checkAndDisconnect(receive(game->players[game->turn], (void *)&pila, sizeof(int)), game);
         checkPila = scegliPila(game, pila);
         if (checkPila != 0)
         {
-            sendCode(game->players[game->turn], -2);
-        } 
+            sendCode(game->players[game->turn], -2, game);
+        }
         else
         {
-            sendCode(game->players[game->turn], 0);
+            sendCode(game->players[game->turn], 0, game);
         }
-        
-        
+
     } while (checkPila != 0);
-    
+
     int checkPedine = 0;
     do
     {
-        checkAndDisconnect(receive(game->players[game->turn], (void *) &numeroDiPedine, sizeof(int)), game->players[game->turn]);
+        checkAndDisconnect(receive(game->players[game->turn], (void *)&numeroDiPedine, sizeof(int)),
+                           game);
         checkPedine = mossa(game, numeroDiPedine);
         if (checkPedine == -1)
         {
-            sendCode(game->players[game->turn], -2);
+            sendCode(game->players[game->turn], -2, game);
         }
         else
         {
-            sendCode(game->players[game->turn], 0);
+            sendCode(game->players[game->turn], 0, game);
         }
-        
-        
+
     } while (checkPedine == -1);
 }
 
@@ -130,42 +143,42 @@ void terminaPartita(int player, int code, game_t *game)
 {
     if (code == 0)
     {
-        for (size_t i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             if (game->players[i] == player)
             {
-                sendMessage(game->players[i], "HAI VINTO!");
+                sendMessage(game->players[i], "HAI VINTO!", game);
             }
             else
             {
-                sendMessage(game->players[i], "HAI PERSO!");
+                sendMessage(game->players[i], "HAI PERSO!", game);
             }
         }
     }
-    else //Disconnessione
-    {
-        printf("Disconnetti");
-        sendCode(player, 1);
-    }
-    
+
+    closeThread(game);
+}
+
+void closeThread(game_t *game)
+{
     close(game->players[0]);
     close(game->players[1]);
-
     free(game->field);
     free(game);
+    fprintf(stderr, "Partita terminata\n");
+    pthread_exit(NULL);
 }
 
-void sendCode(int fd, int code)
+void sendCode(int fd, int code, game_t *game)
 {
-    checkAndDisconnect(sendSock(fd, (void *) &code, sizeof(int)), fd);
+    checkAndDisconnect(sendSock(fd, (void *)&code, sizeof(int)), game);
 }
 
-void checkAndDisconnect(int result, int fd)
+void checkAndDisconnect(int result, game_t *game)
 {
     if (result == -1)
     {
         perror("Disconnected!");
-        close(fd);
-        pthread_exit(NULL);
+        closeThread(game);
     }
 }

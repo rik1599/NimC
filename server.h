@@ -50,13 +50,15 @@ game_t *iniziaPartita(int playerOne, int playerTwo, field_t *field);
  */
 void *playGame(void *arg);
 
+int sendMessageToSock(int fd, char *message);
+
 /**
  * Invia al player attualmente attivo i vari messaggi di output
  * In caso di errore disconnette
  * @param player il giocatore a cui inviare il messaggio
  * @param message il messaggio da visualizzare
  */
-void sendMessage(int player, char *message);
+void sendMessage(int player, char *message, game_t *game);
 
 /**
  * Gestisce il turno lato server nel seguente modo
@@ -85,14 +87,16 @@ void turno(game_t *game);
  */
 void terminaPartita(int player, int code, game_t *game);
 
+void closeThread(game_t *game);
+
 /**
  * 
  */
-void checkAndDisconnect(int result, int fd);
+void checkAndDisconnect(int result, game_t *game);
 
 /**
  * Invia al giocatore un 
  */
-void sendCode(int fd, int code);
+void sendCode(int fd, int code, game_t *game);
 
 #endif
