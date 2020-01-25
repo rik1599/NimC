@@ -105,9 +105,10 @@ void printField(field_t *field, FILE *file)
 
 void checkWithDisconnectAndExit(int result, int server, int exitval, const char *msg)
 {
-    if (result == ERROR)
+    if (result < 0)
     {
         close(server);
+        fprintf(stdout, "Partita terminata causa disconnessione dal server!\n");
         checkWithExit(result, exitval, msg);
     }
 }
