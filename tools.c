@@ -12,7 +12,7 @@ int receive(int fd, void *buffer, unsigned int size)
     int newSize = 0;
     if (checkNoExit(recv(fd, &newSize, sizeof(int), 0), "size not received") == -1)
     {
-        return -1;
+        return DISCONNECTED;
     }
 
     if (newSize > size)
@@ -23,7 +23,7 @@ int receive(int fd, void *buffer, unsigned int size)
 
     if (checkNoExit(recv(fd, buffer, size, 0), "data not received") == -1)
     {
-        return -1;
+        return DISCONNECTED;
     }
 
     return 0;
@@ -33,24 +33,20 @@ int sendSock(int fd, void *buffer, unsigned int size)
 {
     if (checkNoExit(send(fd, &size, sizeof(int), 0), "size not sent") == -1)
     {
-        return -1;
+        return DISCONNECTED;
     }
 
     if (checkNoExit(send(fd, buffer, size, 0), "data not sent") == -1)
     {
-        return -1;
+        return DISCONNECTED;
     }
 
     return 0;
 }
 
-/*
- * Funzione di utilità per controllare il valore di ritorno di una funzione
- * POSIX e ritornare -1 in caso di errore
- */
 int checkWithExit(int result, int exitval, const char *msg)
 {
-    if (result == -1)
+    if (result == ERROR)
     {
         perror(msg);
         exit(exitval);
@@ -60,7 +56,7 @@ int checkWithExit(int result, int exitval, const char *msg)
 
 int checkNoExit(int result, const char *msg)
 {
-    if (result == -1)
+    if (result == ERROR)
     {
         perror(msg);
     }

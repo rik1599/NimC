@@ -2,11 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-/**
- * Crea il campo di gioco (estrae a caso il numero di pedine di ogni pila)
- *
- * @return una struct rappresentante il campo di gioco
- */
 field_t *createField()
 {
 
@@ -30,23 +25,16 @@ field_t *createField()
     return campoDiGioco;
 }
 
-/**
- * Imposta la pila scelta dal giocatore di turno, se il numero dovesse essere
- * diverso da (0,1) torna -1 Se una pila è vuota e viene selezionata torna -2
- *
- * @param game il gioco in corso
- * @param pila la pila da scegliere (0,1)
- */
 int scegliPila(game_t *game, unsigned int pila)
 {
 
     if (pila != 0 && pila != 1)
     {
-        return -1;
+        return INVALID_RANGE;
     }
     else if (game->field->pile[pila] == 0)
     {
-        return -2;
+        return INVALID_RANGE;
     }
     else
     {
@@ -72,24 +60,12 @@ int getMaxPedine(game_t *game)
     return field->pile[field->pilascelta];
 }
 
-/**
- * Rimuove le pedine dalla pila scelta dal giocatore
- * Se il numero di pedine inserito dovesse essere maggiore di quelle rimaste
- * nella pila scelta torna -1 Se una delle due pile dovesse essere vuota e
- * nell'altra sono presenti ancora pedine, il numero massimo di pedine che
- * possono essere tolte è il numero delle pedine presenti - 1 (vince chi toglie
- * l'ultima pedina)
- *
- * @param game il gioco in corso
- * @param pedine il numero di pedine da rimuovere dalla pila scelta in
- * precedenza
- */
 int mossa(game_t *game, unsigned int pedine)
 {
     int maxPedine = getMaxPedine(game);
     if (pedine > maxPedine || pedine == 0)
     {
-        return -1;
+        return INVALID_RANGE;
     }
     else
     {
@@ -99,11 +75,6 @@ int mossa(game_t *game, unsigned int pedine)
     return 0;
 }
 
-/**
- * Controlla se è presente al più una pedina tra tutte e due le pile
- * Se è vero torna il giocatore di turno che viene dichiarato vincitore
- * Se il numero delle pedine è diverso da ==1 ritorna 2.
- */
 int winner(game_t *game)
 {
     int pedineRimaste;
@@ -115,12 +86,9 @@ int winner(game_t *game)
         return game->players[!game->turn];
     }
 
-    return 2;
+    return NO_WINNER;
 }
 
-/**
- * Cambia il turno tra i giocatori
- */
 void cambiaTurno(game_t *game)
 {
     game->turn = !game->turn;

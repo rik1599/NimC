@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
 
     field_t* field = startGame(server);
     int esito = turno(field, server, 1);
-    while (esito == 2)
+    while (esito == NO_WINNER)
     {
         esito = turno(field, server, 0);
     }

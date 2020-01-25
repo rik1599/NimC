@@ -4,6 +4,9 @@
 #ifndef GAME_H
 #define GAME_H
 
+#define NO_WINNER -5
+#define INVALID_RANGE -6
+
 typedef struct field
 {
     int pile[2];    // Il numero di pedine attualmente nella pila
@@ -26,32 +29,48 @@ typedef struct game
 field_t *createField();
 
 /**
- * Imposta la pila scelta dal giocatore di turno, se il numero dovesse essere diverso da (0,1)
- * torna -1
- * Se una pila è vuota e viene selezionata torna -2
+ * Imposta la pila scelta dal giocatore di turno
  *
  * @param game il gioco in corso
  * @param pila la pila da scegliere (0,1)
+ * 
+ * @return INVALID_RANGE se il numero è diverso da (0,1) o se selezionata una pila vuota, 0 altrimenti
+ * 
  */
 int scegliPila(game_t *game, unsigned int pila);
 
 /**
+ * Se una delle pile è stata già svuotata, controlla il numero massimo di pedine che possono essere inserite
+ * 
+ * @param game la partita in corso
+ * 
+ * @return numero massimo di pedine per la pila restante
+ * 
+ */
+int getMaxPedine(game_t *game);
+
+/**
  * Rimuove le pedine dalla pila scelta dal giocatore
  * Se il numero di pedine inserito dovesse essere maggiore di quelle rimaste nella pila scelta
- * torna -1
+ * torna INVALID_RANGE
  * Se una delle due pile dovesse essere vuota e nell'altra sono presenti ancora pedine,
  * il numero massimo di pedine che possono essere tolte è il numero delle pedine presenti - 1
  * (vince chi toglie l'ultima pedina)
  *
- * @param game il gioco in corso
+ * @param game il partita in corso
  * @param pedine il numero di pedine da rimuovere dalla pila scelta in precedenza
+ * 
+ * @return 0 se non ci sono errori, INVALID_RANGE altrimenti
  */
 int mossa(game_t *game, unsigned int pedine);
 
 /**
  * Controlla se è presente al più una pedina tra tutte e due le pile
- * Se è vero torna il giocatore di turno che viene dichiarato vincitore
- * Se il numero delle pedine è diverso da >=1 ritorna 2.
+ * 
+ * @param game la partita in corso
+ * 
+ * @return Se è vero torna il giocatore di turno che viene dichiarato vincitore, altimenti
+ * se il numero delle pedine è diverso da >=1 ritorna NO_WINNER.
  */
 int winner(game_t *game);
 

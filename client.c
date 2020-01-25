@@ -9,9 +9,9 @@
 int connectToServer(int domain, int type, int protocol, struct sockaddr *address, socklen_t len)
 {
     int sock = socket(domain, type, protocol);
-    checkWithExit(sock, -1, "socket()");
+    checkWithExit(sock, INVALID_SOCKET, "socket()");
 
-    checkWithExit(connect(sock, address, len), -2, "Connection failed\n");
+    checkWithExit(connect(sock, address, len), INVALID_SOCKET, "Connection failed\n");
 
     receiveMessage(sock, stdout);
 
@@ -21,40 +21,40 @@ int connectToServer(int domain, int type, int protocol, struct sockaddr *address
 void receiveMessage(int server, FILE *file)
 {
     char *msg = malloc(sizeof(char));
-    checkWithDisconnectAndExit(receive(server, msg, sizeof(char)), server, -3, "Receive message failed\n");
+    checkWithDisconnectAndExit(receive(server, msg, sizeof(char)), server, DISCONNECTED, "Receive message failed\n");
     fprintf(file, "%s", msg);
     fprintf(file, "%s", "\n");
 }
 
-int isWinner(int server)
+int getWinner(int server)
 {
     int serverCode = 0;
-    checkWithDisconnectAndExit(receive(server, &serverCode, sizeof(int)), server, -3, "sendCommand()");
+    checkWithDisconnectAndExit(receive(server, &serverCode, sizeof(int)), server, DISCONNECTED, "sendCommand()");
     return serverCode;
 }
 
-
 int turno(field_t *field, int server, int turno)
 {
+    // A turno 1 non controlla se ci sono vincitori
     if (turno != 1)
     {
-        if (isWinner(server) != 2)
+        int winner = getWinner(server);
+        if (winner != NO_WINNER)
         {
-            return 1;
+            return winner;
         }
     }
     
-    checkWithDisconnectAndExit(receive(server, field, sizeof(field_t)), server, -4, "turno()");
+    checkWithDisconnectAndExit(receive(server, field, sizeof(field_t)), server, DISCONNECTED, "turno()");
     printField(field, stdout);
-    sendCommand(server, stdout, stdin, "Scegli la pila (0,1): ", "Errore: pila inserita non valida!\n");
-    sendCommand(server, stdout, stdin,
+    sendClientInput(server, stdout, stdin, "Scegli la pila (0,1): ", "Errore: pila inserita non valida!\n");
+    sendClientInput(server, stdout, stdin,
                 "Scegli il numero di pedine da rimuovere: ", "Errore: numero di pedine inserite non valido!\n");
     fprintf(stdout, "Turno finito, tocca al tuo avversario\n");
-    int winner = isWinner(server);
-    return winner;
+    return getWinner(server);
 }
 
-void sendCommand(int server, FILE *fileOutput, FILE *fileInput, const char *msg, const char *invalidInputMsg)
+void sendClientInput(int server, FILE *fileOutput, FILE *fileInput, const char *msg, const char *invalidInputMsg)
 {
     int serverCode = 0;
     do
@@ -62,21 +62,21 @@ void sendCommand(int server, FILE *fileOutput, FILE *fileInput, const char *msg,
         fprintf(fileOutput, "%s", msg);
         int x = 0;
         fscanf(fileInput, "%d", &x);
-        checkWithDisconnectAndExit(sendSock(server, &x, sizeof(int)), server, -3, "sendCommand()");
+        checkWithDisconnectAndExit(sendSock(server, &x, sizeof(int)), server, DISCONNECTED, "sendMessageInput()");
 
-        checkWithDisconnectAndExit(receive(server, &serverCode, sizeof(int)), server, -3, "sendCommand()");
+        checkWithDisconnectAndExit(receive(server, &serverCode, sizeof(int)), server, DISCONNECTED, "sendMessageInput()");
 
-        if (serverCode == -2)
+        if (serverCode == INVALID_RANGE)
         {
             fprintf(fileOutput, "%s", invalidInputMsg);
         }
-    } while (serverCode == -2);
+    } while (serverCode == INVALID_RANGE);
 }
 
 field_t *startGame(int server)
 {
     int turn = 0;
-    checkWithDisconnectAndExit(receive(server, &turn, sizeof(turn)), server, -2, "turn");
+    checkWithDisconnectAndExit(receive(server, &turn, sizeof(turn)), server, DISCONNECTED, "turn");
 
     field_t *field = malloc(sizeof(field_t));
 
@@ -105,7 +105,7 @@ void printField(field_t *field, FILE *file)
 
 void checkWithDisconnectAndExit(int result, int server, int exitval, const char *msg)
 {
-    if (result == -1)
+    if (result == ERROR)
     {
         close(server);
         checkWithExit(result, exitval, msg);

@@ -83,19 +83,31 @@ void turno(game_t *game);
  * 
  * @param player il giocatore vincitore
  * @param code il motivo dell'interruzione (0 partita finita, -1 disconnessione o errori vari)
- * @param game_t *game il gioco (fare i free)
+ * @param game_t *game il gioco
  */
 void terminaPartita(int player, int code, game_t *game);
 
+
+
+/**
+ * Chiude il thread e libera la memoria
+ * 
+ * @param game partita in corso (fare i free)
+ */ 
 void closeThread(game_t *game);
 
 /**
- * 
+ * Controlla se c'è un errore e nel caso in cui ci sia fa la disconessione
+ * @param result risultato da controllare
+ * @param game partita da disconnettere
  */
 void checkAndDisconnect(int result, game_t *game);
 
 /**
- * Invia al giocatore un 
+ * Invia al giocatore un codice 
+ * @param fd file del giocatore
+ * @param code codice da inviare 
+ * @param game partita in corso
  */
 void sendCode(int fd, int code, game_t *game);
 

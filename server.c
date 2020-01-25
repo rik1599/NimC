@@ -11,8 +11,8 @@
 int createAndBind(int domain, int type, int protocol, struct sockaddr *address, socklen_t len, int limit)
 {
     int sock = socket(domain, type, protocol);
-    checkWithExit(sock, 1, "socket()");
-    checkWithExit(bind(sock, address, len), 2, "bind()");
+    checkWithExit(sock, INVALID_SOCKET, "socket()");
+    checkWithExit(bind(sock, address, len), INVALID_SOCKET, "bind()");
     listen(sock, limit);
     fprintf(stderr, "In ascolto.\n");
     return sock;
@@ -27,14 +27,14 @@ int connectToPlayer(int socket)
     while (1)
     {
         int fd = accept(socket, (struct sockaddr *)&client_addr, &client_len);
-        if (checkNoExit(fd, "accept()") != -1)
+        if (checkNoExit(fd, "accept()") != ERROR)
         {
             if(sendMessageToSock(fd, "Connesso!, In attesa di un altro giocatore...") == 0)
             {
                 fprintf(stderr, "Giocatore connesso\n");
             }
 
-            if (fd != -1)
+            if (fd != ERROR)
             {
                 return fd;
             }
@@ -68,7 +68,7 @@ void *playGame(void *arg)
     }
 
     int winPlayer = winner(game);
-    while (winPlayer == 2)
+    while (winPlayer == NO_WINNER)
     {
         checkAndDisconnect(sendSock(game->players[game->turn], game->field, sizeof(field_t)), game);
         turno(game);
@@ -110,14 +110,7 @@ void turno(game_t *game)
     {
         checkAndDisconnect(receive(game->players[game->turn], (void *)&pila, sizeof(int)), game);
         checkPila = scegliPila(game, pila);
-        if (checkPila != 0)
-        {
-            sendCode(game->players[game->turn], -2, game);
-        }
-        else
-        {
-            sendCode(game->players[game->turn], 0, game);
-        }
+        sendCode(game->players[game->turn], checkPila, game);
 
     } while (checkPila != 0);
 
@@ -127,16 +120,9 @@ void turno(game_t *game)
         checkAndDisconnect(receive(game->players[game->turn], (void *)&numeroDiPedine, sizeof(int)),
                            game);
         checkPedine = mossa(game, numeroDiPedine);
-        if (checkPedine == -1)
-        {
-            sendCode(game->players[game->turn], -2, game);
-        }
-        else
-        {
-            sendCode(game->players[game->turn], 0, game);
-        }
+        sendCode(game->players[game->turn], checkPedine, game);
 
-    } while (checkPedine == -1);
+    } while (checkPedine != 0);
 }
 
 void terminaPartita(int player, int code, game_t *game)
@@ -176,7 +162,7 @@ void sendCode(int fd, int code, game_t *game)
 
 void checkAndDisconnect(int result, game_t *game)
 {
-    if (result == -1)
+    if (result == ERROR)
     {
         perror("Disconnected!");
         closeThread(game);
