@@ -162,7 +162,7 @@ void sendCode(int fd, int code, game_t *game)
 
 void checkAndDisconnect(int result, game_t *game)
 {
-    if (result == ERROR)
+    if (result < 0)
     {
         perror("Disconnected!");
         closeThread(game);
