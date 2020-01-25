@@ -34,7 +34,7 @@ int connectToPlayer(int socket)
                 fprintf(stderr, "Giocatore connesso\n");
             }
 
-            if (fd != ERROR)
+            if (fd > 0)
             {
                 return fd;
             }

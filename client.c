@@ -108,7 +108,7 @@ void checkWithDisconnectAndExit(int result, int server, int exitval, const char 
     if (result < 0)
     {
         close(server);
-        fprintf(stdout, "Partita terminata causa disconnessione dal server!\n");
+        fprintf(stderr, "Partita terminata causa disconnessione dal server!\n");
         checkWithExit(result, exitval, msg);
     }
 }

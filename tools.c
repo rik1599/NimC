@@ -30,7 +30,7 @@ int receive(int fd, void *buffer, unsigned int size)
 }
 
 int sendSock(int fd, void *buffer, unsigned int size)
-{
+{   
     if (checkNoExit(send(fd, &size, sizeof(int), 0), "size not sent") == -1)
     {
         return DISCONNECTED;
