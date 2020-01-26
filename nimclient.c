@@ -23,7 +23,13 @@ int main(int argc, char const *argv[])
         esito = turno(field, server, 0);
     }
 
-    receiveMessage(server, stdout);
+    if (esito == 0)
+    {
+        fprintf(stderr, "Partita interrotta causa disconnessione!\n");
+    } else
+    {
+        receiveMessage(server, stdout);
+    }
     
     close(server);
     free(field);
