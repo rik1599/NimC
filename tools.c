@@ -9,8 +9,9 @@
 
 int receive(int fd, void *buffer, unsigned int size)
 {
+    // Se viene ricevuta una dimensione 0 c'è stata una disconnessione
     int newSize = 0;
-    if (checkNoExit(recv(fd, &newSize, sizeof(int), 0), "size not received") == -1)
+    if (checkNoExit(recv(fd, &newSize, sizeof(int), 0), "size not received") <= 0)
     {
         return DISCONNECTED;
     }
@@ -21,7 +22,7 @@ int receive(int fd, void *buffer, unsigned int size)
         size = newSize;
     }
 
-    if (checkNoExit(recv(fd, buffer, size, 0), "data not received") == -1)
+    if (checkNoExit(recv(fd, buffer, size, 0), "data not received") <= 0)
     {
         return DISCONNECTED;
     }
@@ -46,7 +47,7 @@ int sendSock(int fd, void *buffer, unsigned int size)
 
 int checkWithExit(int result, int exitval, const char *msg)
 {
-    if (result == ERROR)
+    if (result < 0)
     {
         perror(msg);
         exit(exitval);
@@ -56,7 +57,7 @@ int checkWithExit(int result, int exitval, const char *msg)
 
 int checkNoExit(int result, const char *msg)
 {
-    if (result == ERROR)
+    if (result < 0)
     {
         perror(msg);
     }

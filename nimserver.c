@@ -9,7 +9,7 @@
 #include "game.h"
 #include "tools.h"
 
-#define MAX_PLAYERS 10
+#define PENDING_PLAYERS 10
 
 int main(int argc, char const *argv[])
 {
@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
         .sun_path = SOCKADDR
     };
 
-    int sock = createAndBind(AF_LOCAL, SOCK_STREAM, 0, (struct sockaddr *) &addr, sizeof(addr), MAX_PLAYERS);
+    int sock = createAndBind(AF_LOCAL, SOCK_STREAM, 0, (struct sockaddr *) &addr, sizeof(addr), PENDING_PLAYERS);
     
     while (1)
     {   
