@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/un.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-
+#include <signal.h>
 
 #include "game.h"
 #include "client.h"
@@ -13,6 +12,8 @@
 
 int main(int argc, char const *argv[])
 {
+    signal(SIGPIPE, SIG_IGN);
+    
     struct sockaddr_un address = {AF_LOCAL, SOCKADDR};
     int server = connectToServer(AF_LOCAL, SOCK_STREAM, 0, (struct sockaddr *) &address, sizeof(address));
 
