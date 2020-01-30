@@ -70,7 +70,7 @@ int mossa(game_t *game, unsigned int pedine);
  * @param game la partita in corso
  * 
  * @return Se è vero torna il giocatore di turno che viene dichiarato vincitore, altimenti
- * se il numero delle pedine è diverso da >=1 ritorna NO_WINNER.
+ * se il numero delle pedine è >1 ritorna NO_WINNER.
  */
 int winner(game_t *game);
 

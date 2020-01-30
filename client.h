@@ -9,8 +9,6 @@
 
 #include "game.h"
 
-#define INVALID_SOCKET 1
-
 /**
  * Crea un socket e lo connette al server. Gestisce eventuali
  * errori chiudendo il programma
