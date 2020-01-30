@@ -13,7 +13,7 @@
 /**
  * Errori e codici vari
  */
-#define INVALID_SOCKET 1
+#define INVALID_SOCKET -3
 #define DISCONNECTED -2
 #define ERROR -1
 
