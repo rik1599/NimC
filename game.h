@@ -33,19 +33,19 @@ field_t *createField();
  *
  * @param game il gioco in corso
  * @param pila la pila da scegliere (0,1)
- * 
+ *
  * @return INVALID_RANGE se il numero è diverso da (0,1) o se selezionata una pila vuota, 0 altrimenti
- * 
+ *
  */
 int scegliPila(game_t *game, unsigned int pila);
 
 /**
  * Se una delle pile è stata già svuotata, controlla il numero massimo di pedine che possono essere inserite
- * 
+ *
  * @param game la partita in corso
- * 
+ *
  * @return numero massimo di pedine per la pila restante
- * 
+ *
  */
 int getMaxPedine(game_t *game);
 
@@ -59,18 +59,18 @@ int getMaxPedine(game_t *game);
  *
  * @param game il partita in corso
  * @param pedine il numero di pedine da rimuovere dalla pila scelta in precedenza
- * 
+ *
  * @return 0 se non ci sono errori, INVALID_RANGE altrimenti
  */
 int mossa(game_t *game, unsigned int pedine);
 
 /**
  * Controlla se è presente al più una pedina tra tutte e due le pile
- * 
+ *
  * @param game la partita in corso
- * 
+ *
  * @return Se è vero torna il giocatore di turno che viene dichiarato vincitore, altimenti
- * se il numero delle pedine è diverso da >=1 ritorna NO_WINNER.
+ * se il numero delle pedine è >1 ritorna NO_WINNER.
  */
 int winner(game_t *game);
 
